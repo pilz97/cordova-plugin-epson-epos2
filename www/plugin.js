@@ -185,6 +185,7 @@ var epos2 = {
     data,
     textFont,
     textSize,
+    textSizeHeight,
     textAlign,
     terminate,
     successCallback,
@@ -197,7 +198,7 @@ var epos2 = {
 
     return _exec(
       "printText",
-      [data, textFont || 0, textSize || 1, textAlign || 0],
+      [data, textFont || 0, textSize || 1, textSizeHeight || 1, textAlign || 0],
       arguments
     )
       .then(function(result) {

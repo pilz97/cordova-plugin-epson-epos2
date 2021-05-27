@@ -114,13 +114,13 @@ cordova.epos2.print(stringData, function() => {
 });
 ```
 
-#### .printText(stringData, textFont, textSize, textAlign, terminate)
+#### .printText(stringData, textFont, textSize, textSizeHeight, textAlign, terminate)
 Send text to the connected printer. Also accepts parameters for font type, text size and alignment.
 Can be called multiple times for additional text lines. Set `terminate` to True in order to complete
 the print job and add cut feed.
 
 ```
-cordova.epos2.printText(stringData, 0, 1, 2, false)
+cordova.epos2.printText(stringData, 0, 1, 1, 2, false)
   .then(function() {}
     // success callback
   })

@@ -35,6 +35,7 @@ public class epos2Plugin extends CordovaPlugin {
     private static final Map<String, Integer> printerTypeMap = new HashMap<String, Integer>() {{
         put("TM-M10", Printer.TM_M10);
         put("TM-M30", Printer.TM_M30);
+        put("TM-P20", Printer.TM_P20);
         put("TM-P10", Printer.TM_P20);
         put("TM-P60", Printer.TM_P60);
         put("TM-P60II", Printer.TM_P60II);
@@ -252,6 +253,7 @@ public class epos2Plugin extends CordovaPlugin {
         JSONArray printData;
         int textFont = Printer.PARAM_DEFAULT;
         int textSize = Printer.PARAM_DEFAULT;
+        int textSizeHeight = Printer.PARAM_DEFAULT;
         int textAlign = Printer.PARAM_DEFAULT;
 
         try {
@@ -262,8 +264,12 @@ public class epos2Plugin extends CordovaPlugin {
             }
             if (args.length() > 2) {
                 textSize = args.getInt(2);
+                textSizeHeight = textSize;
             }
             if (args.length() > 3) {
+                textSizeHeight = args.getInt(4);
+            }
+            if (args.length() > 4) {
                 textAlign = args.getInt(3);
             }
         } catch (JSONException e) {
@@ -274,7 +280,7 @@ public class epos2Plugin extends CordovaPlugin {
 
         try {
             printer.addTextFont(textFont);
-            printer.addTextSize(textSize, textSize);
+            printer.addTextSize(textSize, textSizeHeight);
             printer.addTextAlign(textAlign);
 
             for (int i = 0; i < printData.length(); i++) {
