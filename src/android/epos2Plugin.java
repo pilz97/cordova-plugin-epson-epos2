@@ -267,10 +267,10 @@ public class epos2Plugin extends CordovaPlugin {
                 textSizeHeight = textSize;
             }
             if (args.length() > 3) {
-                textSizeHeight = args.getInt(4);
+                textSizeHeight = args.getInt(3);
             }
             if (args.length() > 4) {
-                textAlign = args.getInt(3);
+                textAlign = args.getInt(4);
             }
         } catch (JSONException e) {
             callbackContext.error("Error 0x00000: Invalid arguments: " + e.getCause());
@@ -294,7 +294,7 @@ public class epos2Plugin extends CordovaPlugin {
 
             callbackContext.sendPluginResult(new PluginResult(Status.OK, true));
         } catch (Epos2Exception e) {
-            callbackContext.error("Error 0x00030: Failed to add text data");
+            callbackContext.error("Error 0x00030: Failed to add text data(" + e.getMessage() + ")");
             Log.e(TAG, "Error printing", e);
             try {
                 printer.disconnect();
