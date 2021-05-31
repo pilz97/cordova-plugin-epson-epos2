@@ -256,6 +256,42 @@ var epos2 = {
   },
 
   /**
+   * Send qrcode to the connected printer
+   *
+   * Set `terminate` to True in order to complete the print job.
+   *
+   * @param {String} data Image source as data-url (e.g. data:image/png;base64,xxxxx)
+   * @param {String} [level] Specifies the level: M, L, Q, H
+   * @param {Boolean} [terminate=false] Send additional line feeds an a "cut" command to complete the print
+   * @param {Function} [successCallback]
+   * @param {Function} [errorCallback]
+   * @return {Promise} resolving on success, rejecting on error
+   */
+   printQrCode: function(
+    data,
+    level,
+    terminate,
+    successCallback,
+    errorCallback
+  ) {
+    return _exec("printQrCode", [data, level], arguments)
+      .then(function(result) {
+        return terminate ? _exec("sendData", [], []) : result;
+      })
+      .then(function(result) {
+        if (typeof successCallback === "function") {
+          successCallback(result);
+        }
+      })
+      .catch(function(err) {
+        if (typeof errorCallback === "function") {
+          errorCallback(err);
+        }
+        throw err;
+      });
+  },
+
+  /**
    * Get status information about the connected printer
    *
    * Status object will be returned as the single argument to the `successCallback` function if provided.

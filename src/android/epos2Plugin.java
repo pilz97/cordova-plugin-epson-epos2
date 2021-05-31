@@ -87,6 +87,8 @@ public class epos2Plugin extends CordovaPlugin {
                     getPrinterStatus(args, callbackContext);
                 } else if (action.equals("getSupportedModels")) {
                     getSupportedModels(args, callbackContext);
+                } else if (action.equals("printQrCode")) {
+                    printQrCode(args, callbackContext);
                 }
             }
         });
@@ -348,6 +350,56 @@ public class epos2Plugin extends CordovaPlugin {
             Log.d(TAG, String.format("addImage with data: %dx%d pixels", image.getWidth(), image.getHeight()));
 
             printer.addImage(image, 0, 0, image.getWidth(), image.getHeight(), Printer.COLOR_1, printMode, halfTone, Printer.PARAM_DEFAULT, Printer.COMPRESS_AUTO);
+
+            callbackContext.sendPluginResult(new PluginResult(Status.OK, true));
+        } catch (IllegalArgumentException e) {
+            callbackContext.error("Error 0x00040: Failed to convert image data");
+            Log.e(TAG, "Invalid image data", e);
+        } catch (Epos2Exception e) {
+            callbackContext.error("Error 0x00040: Failed to add image data");
+            Log.e(TAG, "Error printing", e);
+            try {
+                printer.disconnect();
+                printerConnected = false;
+            } catch (Epos2Exception ex) {
+                Log.e(TAG, "Error disconnecting", ex);
+            }
+        }
+    }
+
+    private void printQrCode(final JSONArray args, final CallbackContext callbackContext) {
+        if (!_connectPrinter(callbackContext)) {
+            callbackContext.error("Error 0x00013: Printer is not connected");
+            return;
+        }
+
+        String imageDataUrl;
+        int symbolType = Printer.SYMBOL_QRCODE_MODEL_2;
+        int errCorrLevel = Printer.LEVEL_M;
+
+        try {
+            imageDataUrl = args.getString(0);
+
+            if (args.length() > 1) {
+                String levelArg = args.getString(1);
+                if (levelArg == "L") {
+                    errCorrLevel = Printer.LEVEL_L;
+                } else if (levelArg == "Q") {
+                    errCorrLevel = Printer.LEVEL_Q;
+                } else if (levelArg == "H") {
+                    errCorrLevel = Printer.LEVEL_H;
+                }
+            }
+        } catch (JSONException e) {
+            callbackContext.error("Error 0x00000: Invalid arguments: " + e.getCause());
+            Log.e(TAG, "Invalid arguments for printImage", e);
+            return;
+        }
+
+        try {
+            // create Bitmap image from data-url
+
+            printer.addBarcode(imageDataUrl, symbolType, Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT, Printer.PARAM_UNSPECIFIED, Printer.PARAM_UNSPECIFIED);
 
             callbackContext.sendPluginResult(new PluginResult(Status.OK, true));
         } catch (IllegalArgumentException e) {
