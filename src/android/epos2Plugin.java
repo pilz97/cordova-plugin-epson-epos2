@@ -399,7 +399,7 @@ public class epos2Plugin extends CordovaPlugin {
         try {
             // create Bitmap image from data-url
 
-            printer.addBarcode(imageDataUrl, symbolType, errCorrLevel);
+            printer.addSymbol(imageDataUrl, symbolType, errCorrLevel);
 
             callbackContext.sendPluginResult(new PluginResult(Status.OK, true));
         } catch (IllegalArgumentException e) {
