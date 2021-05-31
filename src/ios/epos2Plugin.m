@@ -391,6 +391,11 @@ static NSDictionary *printerTypeMap;
     NSString *data = [command.arguments objectAtIndex:0];
     int symbolType = EPOS2_SYMBOL_QRCODE_MODEL_2;
     int errCorrLevel = EPOS2_LEVEL_M;
+    int widthArg = 4;
+
+    if ([command.arguments count] > 2) {
+        widthArg = ((NSNumber *)[command.arguments objectAtIndex:2]).intValue;
+    }
     
     // (re-)connect printer with stored information
     if (![self _connectPrinter]) {
@@ -409,8 +414,8 @@ static NSDictionary *printerTypeMap;
         result = [printer addSymbol:data
                              type:symbolType
                             level:errCorrLevel
-                            width: EPOS2_PARAM_UNSPECIFIED
-                            height: EPOS2_PARAM_UNSPECIFIED
+                            width: widthArg
+                            height: widthArg
                             size: EPOS2_PARAM_UNSPECIFIED];
         if (result != EPOS2_SUCCESS) {
             NSLog(@"[epos2] Error in Epos2Printer.addSymbol(): %d", result);
