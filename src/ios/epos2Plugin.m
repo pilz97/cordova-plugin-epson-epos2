@@ -408,7 +408,10 @@ static NSDictionary *printerTypeMap;
         
         result = [printer addSymbol:data
                              type:symbolType
-                            level:errCorrLevel];
+                            level:errCorrLevel
+                            width: EPOS2_PARAM_UNSPECIFIED
+                            height: EPOS2_PARAM_UNSPECIFIED
+                            size: EPOS2_PARAM_UNSPECIFIED];
         if (result != EPOS2_SUCCESS) {
             NSLog(@"[epos2] Error in Epos2Printer.addSymbol(): %d", result);
             cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error 0x00040: Failed to add symbol data"];

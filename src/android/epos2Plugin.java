@@ -397,7 +397,7 @@ public class epos2Plugin extends CordovaPlugin {
         }
 
         try {
-            printer.addSymbol(imageDataUrl, symbolType, errCorrLevel);
+            printer.addSymbol(imageDataUrl, symbolType, errCorrLevel, Printer.PARAM_UNSPECIFIED, Printer.PARAM_UNSPECIFIED);
 
             callbackContext.sendPluginResult(new PluginResult(Status.OK, true));
         } catch (IllegalArgumentException e) {
