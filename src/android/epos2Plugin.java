@@ -376,6 +376,7 @@ public class epos2Plugin extends CordovaPlugin {
         String imageDataUrl;
         int symbolType = Printer.SYMBOL_QRCODE_MODEL_2;
         int errCorrLevel = Printer.LEVEL_M;
+        int width = 4;
 
         try {
             imageDataUrl = args.getString(0);
@@ -390,6 +391,10 @@ public class epos2Plugin extends CordovaPlugin {
                     errCorrLevel = Printer.LEVEL_H;
                 }
             }
+
+            if (args.length() > 2) {
+                width = args.getInt(2);
+            }
         } catch (JSONException e) {
             callbackContext.error("Error 0x00000: Invalid arguments: " + e.getCause());
             Log.e(TAG, "Invalid arguments for printQrCode", e);
@@ -397,7 +402,7 @@ public class epos2Plugin extends CordovaPlugin {
         }
 
         try {
-            printer.addSymbol(imageDataUrl, symbolType, errCorrLevel, Printer.PARAM_UNSPECIFIED, Printer.PARAM_UNSPECIFIED, Printer.PARAM_UNSPECIFIED);
+            printer.addSymbol(imageDataUrl, symbolType, errCorrLevel, width, width, 0);
 
             callbackContext.sendPluginResult(new PluginResult(Status.OK, true));
         } catch (IllegalArgumentException e) {

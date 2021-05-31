@@ -262,6 +262,7 @@ var epos2 = {
    *
    * @param {String} data Image source as data-url (e.g. data:image/png;base64,xxxxx)
    * @param {String} [level] Specifies the level: M, L, Q, H
+   * @param {Number} [width] width and height
    * @param {Boolean} [terminate=false] Send additional line feeds an a "cut" command to complete the print
    * @param {Function} [successCallback]
    * @param {Function} [errorCallback]
@@ -270,11 +271,12 @@ var epos2 = {
    printQrCode: function(
     data,
     level,
+    width,
     terminate,
     successCallback,
     errorCallback
   ) {
-    return _exec("printQrCode", [data, level], arguments)
+    return _exec("printQrCode", [data, level, width], arguments)
       .then(function(result) {
         return terminate ? _exec("sendData", [], []) : result;
       })
