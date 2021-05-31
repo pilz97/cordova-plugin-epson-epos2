@@ -22,6 +22,7 @@ static NSDictionary *printerTypeMap;
         @"TM-M10":    [NSNumber numberWithInt:EPOS2_TM_M10],
         @"TM-M30":    [NSNumber numberWithInt:EPOS2_TM_M30],
         @"TM-P10":    [NSNumber numberWithInt:EPOS2_TM_P20],
+        @"TM-P20":    [NSNumber numberWithInt:EPOS2_TM_P20],
         @"TM-P60":    [NSNumber numberWithInt:EPOS2_TM_P60],
         @"TM-P60II":  [NSNumber numberWithInt:EPOS2_TM_P60II],
         @"TM-P80":    [NSNumber numberWithInt:EPOS2_TM_P80],
@@ -376,6 +377,41 @@ static NSDictionary *printerTypeMap;
         if (result != EPOS2_SUCCESS) {
             NSLog(@"[epos2] Error in Epos2Printer.addImage(): %d", result);
             cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error 0x00040: Failed to add image data"];
+        } else {
+            cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
+        }
+        
+        [self.commandDelegate sendPluginResult:cordovaResult callbackId:printCallbackId];
+    }];
+}
+
+- (void)printQrCode:(CDVInvokedUrlCommand *)command
+{
+    // read command arguments
+    NSString *data = [command.arguments objectAtIndex:0];
+    int symbolType = EPOS2_SYMBOL_QRCODE_MODEL_2;
+    int errCorrLevel = EPOS2_LEVEL_M;
+    
+    // (re-)connect printer with stored information
+    if (![self _connectPrinter]) {
+        CDVPluginResult *cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error 0x00013: Printer is not connected"];
+        [self.commandDelegate sendPluginResult:cordovaResult callbackId:command.callbackId];
+        return;
+    }
+    
+    NSString *printCallbackId = command.callbackId;
+    
+    
+    [self.commandDelegate runInBackground:^{
+        int result = EPOS2_SUCCESS;
+        CDVPluginResult *cordovaResult;
+        
+        result = [printer addSymbol:data
+                             type:symbolType
+                            level:errCorrLevel];
+        if (result != EPOS2_SUCCESS) {
+            NSLog(@"[epos2] Error in Epos2Printer.addSymbol(): %d", result);
+            cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error 0x00040: Failed to add symbol data"];
         } else {
             cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
         }
