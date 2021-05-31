@@ -392,21 +392,19 @@ public class epos2Plugin extends CordovaPlugin {
             }
         } catch (JSONException e) {
             callbackContext.error("Error 0x00000: Invalid arguments: " + e.getCause());
-            Log.e(TAG, "Invalid arguments for printImage", e);
+            Log.e(TAG, "Invalid arguments for printQrCode", e);
             return;
         }
 
         try {
-            // create Bitmap image from data-url
-
             printer.addSymbol(imageDataUrl, symbolType, errCorrLevel);
 
             callbackContext.sendPluginResult(new PluginResult(Status.OK, true));
         } catch (IllegalArgumentException e) {
-            callbackContext.error("Error 0x00040: Failed to convert image data");
+            callbackContext.error("Error 0x00040: Failed to convert symbol data");
             Log.e(TAG, "Invalid image data", e);
         } catch (Epos2Exception e) {
-            callbackContext.error("Error 0x00040: Failed to add image data");
+            callbackContext.error("Error 0x00040: Failed to add symbol data");
             Log.e(TAG, "Error printing", e);
             try {
                 printer.disconnect();
