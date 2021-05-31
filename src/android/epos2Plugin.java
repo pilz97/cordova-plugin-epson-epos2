@@ -392,7 +392,7 @@ public class epos2Plugin extends CordovaPlugin {
         }
 
         try {
-            printer.addFeedLine(3);
+            // printer.addFeedLine(3);
             printer.addCut(Printer.CUT_FEED);
 
             printer.sendData(Printer.PARAM_DEFAULT);

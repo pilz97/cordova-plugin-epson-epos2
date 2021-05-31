@@ -407,11 +407,11 @@ static NSDictionary *printerTypeMap;
         CDVPluginResult *cordovaResult;
         
         // feed paper
-        result = [printer addFeedLine:3];
-        if (result != EPOS2_SUCCESS) {
-            NSLog(@"[epos2] Error in Epos2Printer.addFeedLine(): %d", result);
-            return;
-        }
+        // result = [printer addFeedLine:3];
+        // if (result != EPOS2_SUCCESS) {
+        //     NSLog(@"[epos2] Error in Epos2Printer.addFeedLine(): %d", result);
+        //     return;
+        // }
         
         // send cut command
         result = [printer addCut:EPOS2_CUT_FEED];
